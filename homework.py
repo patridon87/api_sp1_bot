@@ -37,35 +37,32 @@ def parse_homework_status(homework):
         homework_name = homework['homework_name']
         homework_status = homework['status']
 
-        if homework_status == 'reviewing':
-            return 'Работа взята на ревью'
-        elif homework_status == 'rejected':
-            verdict = 'К сожалению, в работе нашлись ошибки.'
-        elif homework_status == 'approved':
-            verdict = 'Ревьюеру всё понравилось, работа зачтена!'
-        else:
-            raise TGBotException('Неизвестный статус домашней работы')
-        return f'У вас проверили работу "{homework_name}"!\n\n{verdict}'
-
     except KeyError:
         raise TGBotException('Сообщение не содержит обязательных полей')
-        logger.error('Сообщение не содержит обязательных полей')
+
+    if homework_status == 'reviewing':
+        return f'Работа {homework_name} взята на ревью'
+    elif homework_status == 'rejected':
+        verdict = 'К сожалению, в работе нашлись ошибки.'
+    elif homework_status == 'approved':
+        verdict = 'Ревьюеру всё понравилось, работа зачтена!'
+    else:
+        raise TGBotException('Неизвестный статус домашней работы')
+    return f'У вас проверили работу "{homework_name}"!\n\n{verdict}'
 
 
 def get_homeworks(current_timestamp):
-    url = PRAKTIKUM_URL
     headers = {'Authorization': f'OAuth {PRAKTIKUM_TOKEN}'}
     payload = {'from_date': current_timestamp}
 
     try:
-        homework_statuses = requests.get(url, headers=headers, params=payload)
+        homework_statuses = requests.get(PRAKTIKUM_URL, headers=headers, params=payload)
     except requests.RequestException:
         raise TGBotException('Сервис "Практикум.Домашка" недоступен')
 
     if homework_statuses.status_code == HTTPStatus.OK:
         return homework_statuses.json()
-    else:
-        raise TGBotException('Сетевая ошибка')
+    raise TGBotException('Сетевая ошибка')
 
 
 def send_message(message):
@@ -77,6 +74,7 @@ def main():
     current_timestamp = int(time.time())  # Начальное значение timestamp
     while True:
         try:
+            a = 1 / 0
             homework = get_homeworks(current_timestamp)
             if len(homework['homeworks']) != 0:
                 current_timestamp = int(time.time())
@@ -92,9 +90,9 @@ def main():
             bot.send_message(chat_id=CHAT_ID, text=f'Бот упал с ошибкой {e}')
             time.sleep(5)
 
-        except Exception as e:
-            logger.error(f'Бот упал с ошибкой {e}')
-            bot.send_message(chat_id=CHAT_ID, text=f'Бот упал с ошибкой {e}')
+        except Exception:
+            logger.exception("Критическкая ошибка!", exc_info=True)
+            bot.send_message(chat_id=CHAT_ID, text='Критическая ошибка!')
             time.sleep(5)
 
 
