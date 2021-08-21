@@ -74,7 +74,6 @@ def main():
     current_timestamp = int(time.time())  # Начальное значение timestamp
     while True:
         try:
-            a = 1 / 0
             homework = get_homeworks(current_timestamp)
             if len(homework['homeworks']) != 0:
                 current_timestamp = int(time.time())
