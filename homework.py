@@ -56,7 +56,9 @@ def get_homeworks(current_timestamp):
     payload = {'from_date': current_timestamp}
 
     try:
-        homework_statuses = requests.get(PRAKTIKUM_URL, headers=headers, params=payload)
+        homework_statuses = requests.get(
+            PRAKTIKUM_URL, headers=headers, params=payload
+        )
     except requests.RequestException:
         raise TGBotException('Сервис "Практикум.Домашка" недоступен')
 
