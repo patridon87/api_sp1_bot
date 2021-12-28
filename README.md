@@ -10,3 +10,7 @@
 
 1. Python 3.7
 2. Python telegram bot 12.7
+
+### Автор
+
+Сергей Карагодин
