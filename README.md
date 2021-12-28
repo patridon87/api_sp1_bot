@@ -8,8 +8,8 @@
 
 ### Стэк:
 
-1. Python 3.7
-2. Python telegram bot 12.7
+- Python 3.7
+- Python telegram bot 12.7
 
 ### Автор
 
